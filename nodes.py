@@ -31,30 +31,54 @@ class Tree(object):
 
     def ascending_process(self, node, ordered):
 
-        if node.left != None:
-            if not node.left.recorded:
+        if node.left != None:  ### 1 Prioritize going all the way left first (to reach the smallest number)
+            if not node.left.recorded: ### 1 If left has never been touched before, call a recursive call to keep going left
                 self.ascending_process(node.left, ordered)
 
-                if not node.recorded:
+                if not node.recorded: ### 5 after you cannot go left anymore AND can't go right, the recursive loop will start unraveling and eventually
+                                        ### hit code after the above recursive call, adding each step as we unravel
                     ordered.append(node.value)
                     node.recorded = True
-            if node.left.recorded and node.right != None:
+
+            if node.right != None: ### 6 after fully unravelling and going as far left as you can on a node, go 1 step to the right and try the whole thing again
+                                    ### starting at step 1 
                 self.ascending_process(node.right, ordered)
 
-        else: # Can't go left anymore
+        else: ### 2 Once you have reached the smallest number, record it and try going right just 1 step
             if not node.recorded:
                 ordered.append(node.value)
                 node.recorded = True
 
 
-            if node.right != None:
+            if node.right != None: ### 3 Trying to go right just 1 step, to then try and go all the way left again
                 self.ascending_process(node.right, ordered)
 
-            else: # can't go left AND can't go right
+            else: ### 4 If you can't go right or left, add the number and do not call another recursion so the recursive loop begins to unfold
 
                 if not node.recorded:
                     ordered.append(node.value)
                     node.recorded = True
+
+    def _reset(self, node):
+
+        if node.left != None:
+            self._reset(node.left)
+
+            node.recorded = False
+
+            if node.right != None:
+                self._reset(node.right)
+
+        else:
+            node.recorded = False
+
+            if node.right != None:
+                self._reset(node.right)
+
+            else:
+                node.recorded = False
+
+
 
     #
     # Public Functions
@@ -71,21 +95,31 @@ class Tree(object):
 
         return ordered
 
+    def reset(self):
+        self._reset(self.head)
+
+    def __str__(self):
+        self.reset()
+        ascend = self.ascending(self.head)
+        return str(ascend)
 
 
-for iter in range(50):
-    digits = [round(random.random() * 100, 0) for _ in range(5000)]
-    t = Tree(Node(1.0))
-    t.fill(digits)
+if __name__ == "__main__":
+    for iter in range(50):
+        digits = [round(random.random() * 100, 0) for _ in range(15)]
+        t = Tree(Node(1.0))
+        t.fill(digits)
 
-    test = t.ascending(t.head)
+        test = t.ascending(t.head)
 
-    for digit in digits:
-        if digit not in test:
-            print('error')
-            print(digits)
-            print(test)
-print('done')
+        for digit in digits:
+            if digit not in test:
+                print('error')
+                print(digits)
+                print(test)
+    print(t)
 
-#print("Ordered: ", t.ascending(t.head))
-#print("Original:", digits)
+
+class Human(object):
+    def __init__(self):
+        pass
