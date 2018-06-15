@@ -26,7 +26,7 @@ if __name__ == '__main__':
     test_range_2 = [8, 7, 6, 5, 4, 3, 2, 1]
     test_range_3 = [4, 4, 5, 8, 2, 3, 10, 15]
     test_range_4 = [0, 4, 5, 8, 2, 3, 10, 0]
-    assert max_profit(test_range_1) == 7
+    assert max_profit(test_range_1, start=1, end=5) == 3
     assert max_profit(test_range_2) == -1
     assert max_profit(test_range_3) == 13
     assert max_profit(test_range_4) == 10
